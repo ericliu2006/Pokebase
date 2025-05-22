@@ -1,17 +1,46 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Camera, Plus, Heart, DollarSign, Sparkles } from "lucide-react"
+'use client';
+
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Camera, Plus, Heart, DollarSign, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function DashboardPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      toast.error('You must be signed in to view this page');
+      router.push('/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-500"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null; // or a loading state
+  }
   return (
     <div className="container px-4 py-8 mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">My Collection</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Welcome back, {session.user?.name || 'Trainer'}!
+          </h1>
           <p className="text-muted-foreground">Manage and view your Pokémon card collection</p>
         </div>
         <div className="flex gap-3">
@@ -94,7 +123,15 @@ export default function DashboardPage() {
   )
 }
 
-function StatsCard({ title, value, description, color, textColor }) {
+interface StatsCardProps {
+  title: string;
+  value: string;
+  description: string;
+  color: string;
+  textColor: string;
+}
+
+function StatsCard({ title, value, description, color, textColor }: StatsCardProps) {
   return (
     <Card className={`border-none ${color}`}>
       <CardContent className="pt-6">
