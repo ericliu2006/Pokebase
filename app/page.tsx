@@ -11,9 +11,10 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center text-center mb-12">
         <div className="relative w-full h-64 md:h-80 mb-6">
           <Image
-            src="/hero-illustration.png"
+            src="/hero-illustration.svg"
             alt="Pokémon Card Collection App"
-            fill
+            width={800}
+            height={400}
             className="object-contain"
             priority
           />
@@ -75,7 +76,13 @@ export default function Home() {
 
       {/* App Preview */}
       <div className="relative w-full h-[500px] mb-12">
-        <Image src="/app-preview.png" alt="App Preview" fill className="object-contain" />
+        <Image 
+          src="/app-preview.svg" 
+          alt="App Preview" 
+          width={800}
+          height={500}
+          className="object-contain" 
+        />
       </div>
 
       {/* CTA Section */}
@@ -92,7 +99,14 @@ export default function Home() {
   )
 }
 
-function FeatureCard({ icon, title, description, color }) {
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  color: string;
+}
+
+function FeatureCard({ icon, title, description, color }: FeatureCardProps) {
   return (
     <Card className={`border-none ${color}`}>
       <CardContent className="pt-6">

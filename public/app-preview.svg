@@ -1,0 +1,11 @@
+<svg width="800" height="500" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="500" fill="#F9FAFB"/>
+  <rect x="150" y="50" width="500" height="400" rx="15" fill="#E5E7EB" stroke="#D1D5DB" stroke-width="2"/>
+  <rect x="200" y="100" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <rect x="320" y="100" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <rect x="440" y="100" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <rect x="200" y="270" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <rect x="320" y="270" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <rect x="440" y="270" width="100" height="150" rx="5" fill="#9CA3AF"/>
+  <text x="400" y="450" font-family="Arial" font-size="16" text-anchor="middle" fill="#6B7280">App Preview</text>
+</svg>

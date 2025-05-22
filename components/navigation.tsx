@@ -1,22 +1,56 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Camera, Home, Users, ShoppingCart, User, LogOut } from "lucide-react"
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, Camera, Home, Users, ShoppingCart, User } from 'lucide-react';
+import { SignOutButton } from './auth/SignOutButton';
+import { useEffect, useState } from 'react';
+
+interface UserSession {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  emailVerified?: Date | null;
+}
 
 export function Navigation() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { data: session, status } = useSession();
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const isLoggedIn = !!session?.user;
+
+  useEffect(() => {
+    if (session?.user) {
+      const user = session.user as UserSession;
+      setIsEmailVerified(user.emailVerified !== null);
+    }
+  }, [session]);
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/login' });
+  };
 
   return (
     <header className="border-b">
+      {isLoggedIn && !isEmailVerified && (
+        <div className="bg-amber-50 text-amber-800 text-center p-2 text-sm">
+          Please verify your email address. Check your inbox for the verification link.
+          <button 
+            onClick={handleSignOut}
+            className="ml-2 text-amber-600 hover:text-amber-800 font-medium"
+          >
+            Sign out
+          </button>
+        </div>
+      )}
       <div className="container flex h-16 items-center px-4 mx-auto">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <span className="text-rose-500">Poké</span>Collect
+        <Link href="/" className="flex items-center font-bold text-xl">
+          <span className="text-rose-500">Poke</span>Base
         </Link>
         <nav className="ml-auto hidden md:flex gap-6">
-          <NavLinks isLoggedIn={isLoggedIn} />
+          <NavLinks isLoggedIn={isLoggedIn} isEmailVerified={isEmailVerified} />
         </nav>
         <div className="ml-auto md:hidden">
           <Sheet>
@@ -28,7 +62,7 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4 mt-8">
-                <NavLinks isLoggedIn={isLoggedIn} />
+                <NavLinks isLoggedIn={isLoggedIn} isEmailVerified={isEmailVerified} />
               </nav>
             </SheetContent>
           </Sheet>
@@ -38,8 +72,13 @@ export function Navigation() {
   )
 }
 
-function NavLinks({ isLoggedIn }) {
-  if (isLoggedIn) {
+interface NavLinksProps {
+  isLoggedIn: boolean;
+  isEmailVerified: boolean;
+}
+
+function NavLinks({ isLoggedIn, isEmailVerified }: NavLinksProps) {
+  if (isLoggedIn && isEmailVerified) {
     return (
       <>
         <Link
@@ -77,13 +116,7 @@ function NavLinks({ isLoggedIn }) {
           <User className="w-5 h-5" />
           <span>Profile</span>
         </Link>
-        <Button
-          variant="ghost"
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
-        </Button>
+        <SignOutButton className="text-muted-foreground hover:text-foreground transition-colors" />
       </>
     )
   }
@@ -94,10 +127,13 @@ function NavLinks({ isLoggedIn }) {
         href="/login"
         className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
       >
-        Login
+        Log In
       </Link>
-      <Link href="/signup">
-        <Button className="bg-rose-500 hover:bg-rose-600">Sign Up</Button>
+      <Link
+        href="/signup"
+        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Sign Up
       </Link>
     </>
   )
