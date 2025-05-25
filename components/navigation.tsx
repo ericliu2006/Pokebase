@@ -37,7 +37,7 @@ export function Navigation() {
       {isLoggedIn && !isEmailVerified && (
         <div className="bg-amber-50 text-amber-800 text-center p-2 text-sm">
           Please verify your email address. Check your inbox for the verification link.
-          <button 
+          <button
             onClick={handleSignOut}
             className="ml-2 text-amber-600 hover:text-amber-800 font-medium"
           >
@@ -69,7 +69,7 @@ export function Navigation() {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 interface NavLinksProps {
@@ -118,7 +118,7 @@ function NavLinks({ isLoggedIn, isEmailVerified }: NavLinksProps) {
         </Link>
         <SignOutButton className="text-muted-foreground hover:text-foreground transition-colors" />
       </>
-    )
+    );
   }
 
   return (
@@ -136,5 +136,5 @@ function NavLinks({ isLoggedIn, isEmailVerified }: NavLinksProps) {
         Sign Up
       </Link>
     </>
-  )
+  );
 }

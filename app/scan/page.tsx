@@ -1,7 +1,14 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Camera, Scan, ArrowRight } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Camera, Scan, ArrowRight } from 'lucide-react';
 
 export default function ScanPage() {
   return (
@@ -27,7 +34,9 @@ export default function ScanPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Scan Card</CardTitle>
-                <CardDescription>Position your card within the frame and make sure it's well-lit</CardDescription>
+                <CardDescription>
+                  Position your card within the frame and make sure it's well-lit
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="bg-muted aspect-[4/3] rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
@@ -35,7 +44,9 @@ export default function ScanPage() {
                   <div className="text-center p-4">
                     <Camera className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <p className="text-muted-foreground">Camera preview will appear here</p>
-                    <p className="text-xs text-muted-foreground mt-2">Make sure the entire card is visible</p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Make sure the entire card is visible
+                    </p>
                   </div>
                 </div>
                 <div className="flex justify-center">
@@ -47,7 +58,7 @@ export default function ScanPage() {
               </CardContent>
               <CardFooter className="flex flex-col text-center text-sm text-muted-foreground">
                 <p>
-                  Can't scan properly?{" "}
+                  Can't scan properly?{' '}
                   <Button variant="link" className="p-0 h-auto text-rose-500">
                     Add card manually
                   </Button>
@@ -59,7 +70,9 @@ export default function ScanPage() {
             <Card>
               <CardHeader>
                 <CardTitle>PSA Grade Prediction</CardTitle>
-                <CardDescription>Our AI will analyze your card and estimate its PSA grade</CardDescription>
+                <CardDescription>
+                  Our AI will analyze your card and estimate its PSA grade
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="bg-muted aspect-[4/3] rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
@@ -100,8 +113,20 @@ export default function ScanPage() {
                 time="2 hours ago"
                 grade="PSA 7-8"
               />
-              <ScannedCardItem name="Pikachu V" set="Vivid Voltage" value="$24.99" time="Yesterday" grade="PSA 9" />
-              <ScannedCardItem name="Mewtwo GX" set="Shining Legends" value="$45.50" time="3 days ago" grade="PSA 8" />
+              <ScannedCardItem
+                name="Pikachu V"
+                set="Vivid Voltage"
+                value="$24.99"
+                time="Yesterday"
+                grade="PSA 9"
+              />
+              <ScannedCardItem
+                name="Mewtwo GX"
+                set="Shining Legends"
+                value="$45.50"
+                time="3 days ago"
+                grade="PSA 8"
+              />
             </div>
           </CardContent>
           <CardFooter>
@@ -113,7 +138,7 @@ export default function ScanPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
 function ScannedCardItem({ name, set, value, time, grade }) {
@@ -135,5 +160,5 @@ function ScannedCardItem({ name, set, value, time, grade }) {
         <p className="text-xs text-muted-foreground">{grade}</p>
       </div>
     </div>
-  )
+  );
 }

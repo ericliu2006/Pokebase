@@ -16,15 +16,15 @@ const publicPaths = [
   '/_vercel',
   '/site.webmanifest',
   '/sitemap.xml',
-  '/robots.txt'
+  '/robots.txt',
 ];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip middleware for public paths
   const isPublicPath = publicPaths.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
+    path => pathname === path || pathname.startsWith(`${path}/`)
   );
 
   if (isPublicPath) {
@@ -32,18 +32,14 @@ export async function middleware(request: NextRequest) {
   }
 
   // Skip middleware for API routes and static files
-  if (
-    pathname.startsWith('/api/') ||
-    pathname.includes('.') ||
-    pathname.startsWith('/_next/')
-  ) {
+  if (pathname.startsWith('/api/') || pathname.includes('.') || pathname.startsWith('/_next/')) {
     return NextResponse.next();
   }
 
   // Get the token from the request
-  const token = await getToken({ 
+  const token = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET 
+    secret: process.env.NEXTAUTH_SECRET,
   });
 
   // Redirect to login if not authenticated

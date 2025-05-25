@@ -8,14 +8,15 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'PokéCollect - Pokémon Card Collection App',
-  description: 'Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and even predict PSA grades!',
+  description:
+    'Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and even predict PSA grades!',
   generator: 'v0.dev',
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -26,5 +27,5 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  )
+  );
 }

@@ -88,28 +88,28 @@ export default function DashboardPage() {
         </TabsList>
         <TabsContent value="all" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
               <PokemonCard key={i} />
             ))}
           </div>
         </TabsContent>
         <TabsContent value="favorites" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
               <PokemonCard key={i} />
             ))}
           </div>
         </TabsContent>
         <TabsContent value="forSale" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2].map((i) => (
+            {[1, 2].map(i => (
               <PokemonCard key={i} />
             ))}
           </div>
         </TabsContent>
         <TabsContent value="recent" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4].map(i => (
               <PokemonCard key={i} />
             ))}
           </div>
@@ -120,7 +120,7 @@ export default function DashboardPage() {
         <Button variant="outline">Load More</Button>
       </div>
     </div>
-  )
+  );
 }
 
 interface StatsCardProps {
@@ -142,7 +142,7 @@ function StatsCard({ title, value, description, color, textColor }: StatsCardPro
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function PokemonCard() {
@@ -186,5 +186,5 @@ function PokemonCard() {
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 }

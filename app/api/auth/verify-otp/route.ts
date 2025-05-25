@@ -10,15 +10,12 @@ export async function POST(req: Request) {
     const { email, token } = await req.json();
 
     if (!email || !token) {
-      return NextResponse.json(
-        { error: 'Email and token are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email and token are required' }, { status: 400 });
     }
 
     // Find the verification token using the token value
     const verificationToken = await prisma.emailVerificationToken.findFirst({
-      where: { 
+      where: {
         email: email.toLowerCase(),
         token: token,
       },
@@ -33,18 +30,12 @@ export async function POST(req: Request) {
 
     // Check if token is expired
     if (new Date() > verificationToken.expires) {
-      return NextResponse.json(
-        { error: 'Verification token has expired' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Verification token has expired' }, { status: 400 });
     }
 
     // Check if token matches
     if (verificationToken.token !== token) {
-      return NextResponse.json(
-        { error: 'Invalid verification code' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
     }
 
     // Update user as verified
@@ -65,7 +56,7 @@ export async function POST(req: Request) {
     // Get the user's password for sign-in
     const userWithPassword = await prisma.user.findUnique({
       where: { id: updatedUser.id },
-      select: { password: true }
+      select: { password: true },
     });
 
     if (!userWithPassword?.password) {
@@ -88,9 +79,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('Error verifying OTP:', error);
-    return NextResponse.json(
-      { error: 'Failed to verify OTP' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to verify OTP' }, { status: 500 });
   }
 }

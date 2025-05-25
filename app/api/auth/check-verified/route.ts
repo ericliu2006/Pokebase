@@ -6,10 +6,7 @@ export async function POST(req: Request) {
     const { email } = await req.json();
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -22,10 +19,7 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'No user found with this email' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'No user found with this email' }, { status: 404 });
     }
 
     return NextResponse.json({

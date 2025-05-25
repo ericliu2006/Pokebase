@@ -1,11 +1,11 @@
-import NextAuth, { 
-  type NextAuthOptions, 
-  type DefaultSession, 
-  type User as NextAuthUser, 
-  type Profile, 
+import NextAuth, {
+  type NextAuthOptions,
+  type DefaultSession,
+  type User as NextAuthUser,
+  type Profile,
   type Account,
   type Session,
-  type TokenSet
+  type TokenSet,
 } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
@@ -23,7 +23,7 @@ declare module 'next-auth' {
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -90,10 +90,10 @@ export const authOptions = {
     // Session callback is defined in the JWT callback below
     async signIn(params: any) {
       const { user, account, profile } = params;
-      
+
       // Skip if this is an email verification request
       if (params?.email?.verificationRequest) return true;
-      
+
       // Type assertion for profile to access its properties
       const profileData = profile as any;
       // For OAuth providers, automatically verify their email
@@ -138,7 +138,8 @@ export const authOptions = {
               data: {
                 emailVerified: new Date(),
                 ...(!existingUser.name && profileData?.name && { name: String(profileData.name) }),
-                ...(!existingUser.image && profileData?.image && { image: String(profileData.image) }),
+                ...(!existingUser.image &&
+                  profileData?.image && { image: String(profileData.image) }),
               },
             });
 
@@ -176,20 +177,20 @@ export const authOptions = {
         }
       }
       return true;
-      
+
       // For credentials login, check if email is verified
       if (account?.provider === 'credentials' && user?.email) {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email },
-          select: { emailVerified: true }
+          select: { emailVerified: true },
         });
-        
+
         if (!dbUser?.emailVerified) {
           // User exists but email is not verified
           throw new Error('Please verify your email before signing in');
         }
       }
-      
+
       return true;
     },
     async session({ session, token }: { session: any; token: any }) {

@@ -1,12 +1,18 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Search, Filter, DollarSign, MessageSquare } from "lucide-react"
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Search, Filter, DollarSign, MessageSquare } from 'lucide-react';
 
 export default function MarketplacePage() {
   return (
@@ -14,7 +20,9 @@ export default function MarketplacePage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">Marketplace</h1>
-          <p className="text-muted-foreground">Buy, sell, and trade Pokémon cards with other collectors</p>
+          <p className="text-muted-foreground">
+            Buy, sell, and trade Pokémon cards with other collectors
+          </p>
         </div>
         <Button className="bg-rose-500 hover:bg-rose-600">
           <DollarSign className="mr-2 h-4 w-4" />
@@ -67,12 +75,12 @@ export default function MarketplacePage() {
         </TabsList>
         <TabsContent value="buy" className="mt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
               <MarketplaceCard
                 key={i}
-                cardName={`Pikachu ${i % 2 === 0 ? "VMAX" : "V"}`}
+                cardName={`Pikachu ${i % 2 === 0 ? 'VMAX' : 'V'}`}
                 price={i % 2 === 0 ? 89.99 : 24.99}
-                condition={i % 3 === 0 ? "Near Mint" : i % 3 === 1 ? "Excellent" : "Good"}
+                condition={i % 3 === 0 ? 'Near Mint' : i % 3 === 1 ? 'Excellent' : 'Good'}
                 seller={`User${i}`}
                 rating={4.8}
                 image="/placeholder.svg?height=300&width=215"
@@ -82,12 +90,12 @@ export default function MarketplacePage() {
         </TabsContent>
         <TabsContent value="trade" className="mt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4].map(i => (
               <TradeCard
                 key={i}
-                cardName={`Charizard ${i % 2 === 0 ? "VMAX" : "V"}`}
-                lookingFor={i % 2 === 0 ? "Mewtwo GX, Pikachu VMAX" : "Any Eevee evolution cards"}
-                condition={i % 3 === 0 ? "Near Mint" : i % 3 === 1 ? "Excellent" : "Good"}
+                cardName={`Charizard ${i % 2 === 0 ? 'VMAX' : 'V'}`}
+                lookingFor={i % 2 === 0 ? 'Mewtwo GX, Pikachu VMAX' : 'Any Eevee evolution cards'}
+                condition={i % 3 === 0 ? 'Near Mint' : i % 3 === 1 ? 'Excellent' : 'Good'}
                 trader={`Trader${i}`}
                 rating={4.9}
                 image="/placeholder.svg?height=300&width=215"
@@ -97,12 +105,12 @@ export default function MarketplacePage() {
         </TabsContent>
         <TabsContent value="my-listings" className="mt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {[1, 2].map((i) => (
+            {[1, 2].map(i => (
               <MyListingCard
                 key={i}
-                cardName={`Mewtwo ${i % 2 === 0 ? "GX" : "V"}`}
+                cardName={`Mewtwo ${i % 2 === 0 ? 'GX' : 'V'}`}
                 price={i % 2 === 0 ? 45.5 : 32.99}
-                condition={i % 2 === 0 ? "Near Mint" : "Excellent"}
+                condition={i % 2 === 0 ? 'Near Mint' : 'Excellent'}
                 views={i % 2 === 0 ? 24 : 18}
                 interested={i % 2 === 0 ? 3 : 1}
                 image="/placeholder.svg?height=300&width=215"
@@ -116,7 +124,7 @@ export default function MarketplacePage() {
         <Button variant="outline">Load More</Button>
       </div>
     </div>
-  )
+  );
 }
 
 function MarketplaceCard({ cardName, price, condition, seller, rating, image }) {
@@ -125,7 +133,7 @@ function MarketplaceCard({ cardName, price, condition, seller, rating, image }) 
       <div className="relative">
         <Link href="/card/1">
           <Image
-            src={image || "/placeholder.svg"}
+            src={image || '/placeholder.svg'}
             alt={cardName}
             width={215}
             height={300}
@@ -151,7 +159,7 @@ function MarketplaceCard({ cardName, price, condition, seller, rating, image }) 
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 function TradeCard({ cardName, lookingFor, condition, trader, rating, image }) {
@@ -160,7 +168,7 @@ function TradeCard({ cardName, lookingFor, condition, trader, rating, image }) {
       <div className="relative">
         <Link href="/card/1">
           <Image
-            src={image || "/placeholder.svg"}
+            src={image || '/placeholder.svg'}
             alt={cardName}
             width={215}
             height={300}
@@ -187,7 +195,7 @@ function TradeCard({ cardName, lookingFor, condition, trader, rating, image }) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
 function MyListingCard({ cardName, price, condition, views, interested, image }) {
@@ -196,7 +204,7 @@ function MyListingCard({ cardName, price, condition, views, interested, image })
       <div className="relative">
         <Link href="/card/1">
           <Image
-            src={image || "/placeholder.svg"}
+            src={image || '/placeholder.svg'}
             alt={cardName}
             width={215}
             height={300}
@@ -230,5 +238,5 @@ function MyListingCard({ cardName, price, condition, views, interested, image })
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

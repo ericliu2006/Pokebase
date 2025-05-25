@@ -6,12 +6,9 @@ import { prisma } from '@/lib/prisma';
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.email) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Not authenticated' }),
-        { status: 401 }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Not authenticated' }), { status: 401 });
     }
 
     const { name, email, image } = await req.json();
@@ -35,22 +32,16 @@ export async function PUT(req: Request) {
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Error updating profile:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to update profile' }),
-      { status: 500 }
-    );
+    return new NextResponse(JSON.stringify({ error: 'Failed to update profile' }), { status: 500 });
   }
 }
 
 export async function DELETE() {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user?.email) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Not authenticated' }),
-        { status: 401 }
-      );
+      return new NextResponse(JSON.stringify({ error: 'Not authenticated' }), { status: 401 });
     }
 
     // Delete user from database
@@ -61,9 +52,6 @@ export async function DELETE() {
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('Error deleting account:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Failed to delete account' }),
-      { status: 500 }
-    );
+    return new NextResponse(JSON.stringify({ error: 'Failed to delete account' }), { status: 500 });
   }
 }

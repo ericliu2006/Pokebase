@@ -5,12 +5,14 @@ A modern web application for Pokémon enthusiasts to track their collections, co
 ## Features
 
 - **User Authentication**
+
   - Email/Password sign up and login
   - Google OAuth integration
   - Email verification for new accounts
   - Protected routes for authenticated users
 
 - **Email Verification**
+
   - Secure OTP (One-Time Password) verification
   - Resend verification email
   - Protected routes for verified users only
@@ -53,12 +55,14 @@ MAILGUN_DOMAIN="your-mailgun-domain"
 ## Getting Started
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-username/pokebase.git
    cd pokebase
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -68,11 +72,13 @@ MAILGUN_DOMAIN="your-mailgun-domain"
    ```
 
 3. Set up the database:
+
    ```bash
    npx prisma migrate dev --name init
    ```
 
 4. Run the development server:
+
    ```bash
    npm run dev
    # or

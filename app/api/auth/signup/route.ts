@@ -25,10 +25,7 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
     }
 
     // Hash password
@@ -52,7 +49,7 @@ export async function POST(req: Request) {
     });
 
     console.log('User created successfully:', user);
-    
+
     // Send verification email
     const { generateOTP, sendVerificationEmail } = await import('@/lib/email');
     const otp = generateOTP(6);
@@ -73,14 +70,14 @@ export async function POST(req: Request) {
     await sendVerificationEmail(email, otp);
 
     return NextResponse.json(
-      { 
-        user: { 
+      {
+        user: {
           id: user.id,
           name: user.name,
           email: user.email,
           emailVerified: user.emailVerified,
-        }, 
-        message: 'User created successfully. Please check your email to verify your account.' 
+        },
+        message: 'User created successfully. Please check your email to verify your account.',
       },
       { status: 201 }
     );
@@ -91,7 +88,7 @@ export async function POST(req: Request) {
       console.error('Error details:', {
         name: error.name,
         message: error.message,
-        stack: error.stack
+        stack: error.stack,
       });
     }
     return NextResponse.json(

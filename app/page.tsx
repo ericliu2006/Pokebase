@@ -1,8 +1,8 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Camera, Scan, Users, ShoppingCart, Search, PlusCircle } from "lucide-react"
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Camera, Scan, Users, ShoppingCart, Search, PlusCircle } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -21,8 +21,8 @@ export default function Home() {
         </div>
         <h1 className="text-3xl md:text-4xl font-bold mb-4">PokéCollect</h1>
         <p className="text-lg text-muted-foreground mb-6 max-w-2xl">
-          Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and even predict PSA
-          grades!
+          Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and
+          even predict PSA grades!
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button size="lg" className="bg-rose-500 hover:bg-rose-600">
@@ -76,12 +76,12 @@ export default function Home() {
 
       {/* App Preview */}
       <div className="relative w-full h-[500px] mb-12">
-        <Image 
-          src="/app-preview.svg" 
-          alt="App Preview" 
+        <Image
+          src="/app-preview.svg"
+          alt="App Preview"
           width={800}
           height={500}
-          className="object-contain" 
+          className="object-contain"
         />
       </div>
 
@@ -96,7 +96,7 @@ export default function Home() {
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 interface FeatureCardProps {
@@ -115,5 +115,5 @@ function FeatureCard({ icon, title, description, color }: FeatureCardProps) {
         <p className="text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
-  )
+  );
 }

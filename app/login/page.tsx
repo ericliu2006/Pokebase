@@ -6,7 +6,14 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FcGoogle } from 'react-icons/fc';
@@ -17,7 +24,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get('callbackUrl') || '/dashboard';
   const isVerified = searchParams?.get('verified') === 'true';
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: searchParams.get('email') || '',
@@ -42,7 +49,7 @@ export default function LoginPage() {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -109,7 +116,12 @@ export default function LoginPage() {
             </p>
           </div>
           <div className="relative h-60 w-full">
-            <Image src="/login-illustration.png" alt="Login illustration" fill className="object-contain" />
+            <Image
+              src="/login-illustration.png"
+              alt="Login illustration"
+              fill
+              className="object-contain"
+            />
           </div>
         </div>
         <div className="flex items-center">
@@ -121,17 +133,15 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
                 {error && (
-                  <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">
-                    {error}
-                  </div>
+                  <div className="p-3 text-sm text-red-700 bg-red-100 rounded-md">{error}</div>
                 )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
+                  <Input
+                    id="email"
                     name="email"
-                    type="email" 
-                    placeholder="Enter your email" 
+                    type="email"
+                    placeholder="Enter your email"
                     value={formData.email}
                     onChange={handleChange}
                     required
@@ -139,11 +149,11 @@ export default function LoginPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
-                  <Input 
-                    id="password" 
+                  <Input
+                    id="password"
                     name="password"
-                    type="password" 
-                    placeholder="Enter your password" 
+                    type="password"
+                    placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleChange}
                     required
@@ -156,8 +166,8 @@ export default function LoginPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-rose-500 hover:bg-rose-600"
                   disabled={isLoading}
                 >
@@ -168,12 +178,14 @@ export default function LoginPage() {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
                   </div>
                 </div>
-                <Button 
+                <Button
                   type="button"
-                  variant="outline" 
+                  variant="outline"
                   className="w-full"
                   onClick={handleGoogleSignIn}
                   disabled={isLoading}

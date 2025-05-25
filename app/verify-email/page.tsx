@@ -5,7 +5,14 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { toast } from 'sonner';
 
 export default function VerifyEmailPage() {
@@ -19,7 +26,7 @@ export default function VerifyEmailPage() {
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || otp.length !== 6) return;
-    
+
     setIsLoading(true);
 
     try {
@@ -48,9 +55,9 @@ export default function VerifyEmailPage() {
 
   const handleResend = async () => {
     if (!email) return;
-    
+
     setIsResending(true);
-    
+
     try {
       const response = await fetch('/api/auth/verify-email', {
         method: 'POST',
@@ -96,24 +103,20 @@ export default function VerifyEmailPage() {
                 pattern="[0-9]*"
                 placeholder="Enter 6-digit code"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="text-center text-xl tracking-widest h-14"
                 required
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isLoading || otp.length !== 6}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6}>
               {isLoading ? 'Verifying...' : 'Verify Email'}
             </Button>
             <div className="text-center text-sm text-muted-foreground">
               Didn't receive a code?{' '}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleResend}
                 className="font-medium text-rose-600 hover:text-rose-500"
                 disabled={isResending}

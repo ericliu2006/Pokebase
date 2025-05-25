@@ -1,10 +1,17 @@
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Search, UserPlus, Check, X, MessageSquare } from "lucide-react"
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Search, UserPlus, Check, X, MessageSquare } from 'lucide-react';
 
 export default function FriendsPage() {
   return (
@@ -12,7 +19,9 @@ export default function FriendsPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold mb-2">Friends</h1>
-          <p className="text-muted-foreground">Connect with other collectors and view their collections</p>
+          <p className="text-muted-foreground">
+            Connect with other collectors and view their collections
+          </p>
         </div>
         <div className="relative w-full md:w-auto">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -138,7 +147,7 @@ export default function FriendsPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 
 function FriendCard({ name, username, cards, rarest, avatar }) {
@@ -147,7 +156,7 @@ function FriendCard({ name, username, cards, rarest, avatar }) {
       <CardContent className="pt-6">
         <div className="flex items-center gap-4 mb-4">
           <div className="relative w-12 h-12 rounded-full overflow-hidden">
-            <Image src={avatar || "/placeholder.svg"} alt={name} fill className="object-cover" />
+            <Image src={avatar || '/placeholder.svg'} alt={name} fill className="object-cover" />
           </div>
           <div>
             <h3 className="font-medium">{name}</h3>
@@ -173,7 +182,7 @@ function FriendCard({ name, username, cards, rarest, avatar }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function FriendRequestCard({ name, username, mutualFriends, avatar }) {
@@ -182,7 +191,7 @@ function FriendRequestCard({ name, username, mutualFriends, avatar }) {
       <CardContent className="p-4">
         <div className="flex items-center gap-4">
           <div className="relative w-12 h-12 rounded-full overflow-hidden">
-            <Image src={avatar || "/placeholder.svg"} alt={name} fill className="object-cover" />
+            <Image src={avatar || '/placeholder.svg'} alt={name} fill className="object-cover" />
           </div>
           <div className="flex-1">
             <h3 className="font-medium">{name}</h3>
@@ -203,7 +212,7 @@ function FriendRequestCard({ name, username, mutualFriends, avatar }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function DiscoverCard({ name, username, cards, mutualFriends, avatar }) {
@@ -212,7 +221,7 @@ function DiscoverCard({ name, username, cards, mutualFriends, avatar }) {
       <CardContent className="pt-6">
         <div className="flex items-center gap-4 mb-4">
           <div className="relative w-12 h-12 rounded-full overflow-hidden">
-            <Image src={avatar || "/placeholder.svg"} alt={name} fill className="object-cover" />
+            <Image src={avatar || '/placeholder.svg'} alt={name} fill className="object-cover" />
           </div>
           <div>
             <h3 className="font-medium">{name}</h3>
@@ -235,21 +244,22 @@ function DiscoverCard({ name, username, cards, mutualFriends, avatar }) {
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function ActivityItem({ name, action, card, time, avatar }) {
   return (
     <div className="flex items-center gap-3">
       <div className="relative w-10 h-10 rounded-full overflow-hidden">
-        <Image src={avatar || "/placeholder.svg"} alt={name} fill className="object-cover" />
+        <Image src={avatar || '/placeholder.svg'} alt={name} fill className="object-cover" />
       </div>
       <div className="flex-1">
         <p className="text-sm">
-          <span className="font-medium">{name}</span> {action} <Badge variant="outline">{card}</Badge>
+          <span className="font-medium">{name}</span> {action}{' '}
+          <Badge variant="outline">{card}</Badge>
         </p>
         <p className="text-xs text-muted-foreground">{time}</p>
       </div>
     </div>
-  )
+  );
 }

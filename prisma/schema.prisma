@@ -10,6 +10,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Card {
+  id        String   @id
+  name      String
+  supertype String
+  subtype   String
+  hp    String
+  types String[]
+  evolvesFrom String?
+  evolvesTo   String? @db.Text // Store as JSON string
+  number String
+  artist String
+  rarity String 
+  image String?
+  // Normal prices
+  normalLowPrice Float?
+  normalMidPrice Float?
+  normalHighPrice Float?
+  normalMarketVal Float?
+  
+  // Holofoil prices
+  holofoilLowPrice Float?
+  holofoilMidPrice Float?
+  holofoilHighPrice Float?
+  holofoilMarketVal Float?
+  
+  // Reverse Holofoil prices
+  reverseHolofoilLowPrice Float?
+  reverseHolofoilMidPrice Float?
+  reverseHolofoilHighPrice Float?
+  reverseHolofoilMarketVal Float?
+  
+  // 1st Edition Normal prices
+  firstEditionNormalLowPrice Float?
+  firstEditionNormalMidPrice Float?
+  firstEditionNormalHighPrice Float?
+  firstEditionNormalMarketVal Float?
+  
+  // 1st Edition Holofoil prices
+  firstEditionHolofoilLowPrice Float?
+  firstEditionHolofoilMidPrice Float?
+  firstEditionHolofoilHighPrice Float?
+  firstEditionHolofoilMarketVal Float?
+  
+  // Set relation (optional)
+  set   Set  @relation(fields: [setId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  setId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Set {
+  id        String    @id
+  name      String
+  series    String
+  releaseDate DateTime
+  total     Int
+  symbolImage String?
+  logoImage  String?
+  cards     Card[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String

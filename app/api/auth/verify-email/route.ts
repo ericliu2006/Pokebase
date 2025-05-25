@@ -10,10 +10,7 @@ export async function POST(req: Request) {
     const { email } = await req.json();
 
     if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
     // Find user by email
@@ -22,18 +19,12 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'No user found with this email' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'No user found with this email' }, { status: 404 });
     }
 
     // Check if user is already verified
     if (user.emailVerified) {
-      return NextResponse.json(
-        { error: 'Email is already verified' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email is already verified' }, { status: 400 });
     }
 
     // Generate OTP (6 digits)
@@ -75,9 +66,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error('Error sending verification email:', error);
-    return NextResponse.json(
-      { error: 'Failed to send verification email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send verification email' }, { status: 500 });
   }
 }

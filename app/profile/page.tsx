@@ -4,7 +4,14 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,7 +25,7 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    image: ''
+    image: '',
   });
 
   useEffect(() => {
@@ -26,7 +33,7 @@ export default function ProfilePage() {
       setFormData({
         name: session.user.name || '',
         email: session.user.email || '',
-        image: session.user.image || ''
+        image: session.user.image || '',
       });
     }
   }, [session]);
@@ -35,7 +42,7 @@ export default function ProfilePage() {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -46,7 +53,7 @@ export default function ProfilePage() {
     try {
       // Create a copy of formData without the email field
       const { email, ...updateData } = formData;
-      
+
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
@@ -64,8 +71,8 @@ export default function ProfilePage() {
         ...session,
         user: {
           ...session?.user,
-          ...formData
-        }
+          ...formData,
+        },
       });
 
       toast.success('Profile updated successfully');
@@ -100,18 +107,14 @@ export default function ProfilePage() {
       <Card>
         <CardHeader>
           <CardTitle>Profile Information</CardTitle>
-          <CardDescription>
-            Update your profile information and settings here.
-          </CardDescription>
+          <CardDescription>Update your profile information and settings here.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="h-24 w-24">
                 <AvatarImage src={formData.image} alt={formData.name || 'User'} />
-                <AvatarFallback>
-                  {formData.name?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
+                <AvatarFallback>{formData.name?.charAt(0).toUpperCase() || 'U'}</AvatarFallback>
               </Avatar>
               {isEditing && (
                 <div className="w-full max-w-xs">

@@ -10,8 +10,8 @@ export function SignOutButton({ className = '' }: { className?: string }) {
   };
 
   return (
-    <Button 
-      variant="ghost" 
+    <Button
+      variant="ghost"
       onClick={handleSignOut}
       className={`flex items-center gap-2 ${className}`}
     >

@@ -1,9 +1,17 @@
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Heart, Share2, DollarSign, ArrowUpDown, MessageCircle, Users, ShoppingCart } from "lucide-react"
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Heart,
+  Share2,
+  DollarSign,
+  ArrowUpDown,
+  MessageCircle,
+  Users,
+  ShoppingCart,
+} from 'lucide-react';
 
 export default function CardDetailPage() {
   return (
@@ -13,12 +21,17 @@ export default function CardDetailPage() {
         <div className="flex flex-col gap-6">
           <div className="bg-muted/30 rounded-lg p-6 flex items-center justify-center">
             <div className="relative w-[215px] h-[300px]">
-              <Image src="/placeholder.svg?height=300&width=215" alt="Pikachu V" fill className="object-contain" />
+              <Image
+                src="/placeholder.svg?height=300&width=215"
+                alt="Pikachu V"
+                fill
+                className="object-contain"
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-5 gap-2">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="aspect-[3/4] bg-muted/30 rounded-md overflow-hidden">
                 <Image
                   src="/placeholder.svg?height=100&width=75"
@@ -79,7 +92,10 @@ export default function CardDetailPage() {
             <div>
               <h3 className="font-medium mb-1">Condition</h3>
               <div className="flex gap-2">
-                <Badge variant="outline" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100">
+                <Badge
+                  variant="outline"
+                  className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                >
                   Near Mint
                 </Badge>
                 <Badge variant="outline">Excellent</Badge>
@@ -95,8 +111,8 @@ export default function CardDetailPage() {
                   8
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Our AI predicts this card would receive a PSA 8 grade based on centering, edges, corners, and surface
-                  analysis.
+                  Our AI predicts this card would receive a PSA 8 grade based on centering, edges,
+                  corners, and surface analysis.
                 </p>
               </div>
             </div>
@@ -144,9 +160,9 @@ export default function CardDetailPage() {
               <div>
                 <h4 className="font-medium mb-1">Description</h4>
                 <p className="text-sm text-muted-foreground">
-                  This Pikachu V card features the iconic Electric-type Pokémon in its V form, with enhanced attacks and
-                  HP. The illustration by Ryuta Fuse showcases Pikachu in a dynamic pose with electric energy
-                  surrounding it.
+                  This Pikachu V card features the iconic Electric-type Pokémon in its V form, with
+                  enhanced attacks and HP. The illustration by Ryuta Fuse showcases Pikachu in a
+                  dynamic pose with electric energy surrounding it.
                 </p>
               </div>
             </TabsContent>
@@ -162,7 +178,8 @@ export default function CardDetailPage() {
                       <p className="text-xs text-muted-foreground">2 days ago</p>
                     </div>
                     <p className="text-sm">
-                      Amazing card! I've been looking for this one to complete my Pikachu collection.
+                      Amazing card! I've been looking for this one to complete my Pikachu
+                      collection.
                     </p>
                   </div>
                 </div>
@@ -220,5 +237,5 @@ export default function CardDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
