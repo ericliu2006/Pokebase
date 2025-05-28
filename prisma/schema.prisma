@@ -5,6 +5,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum CardQuality {
+  MINT
+  NEAR_MINT
+  LIGHTLY_PLAYED
+  MODERATELY_PLAYED
+  HEAVILY_PLAYED
+  DAMAGED
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -59,6 +68,26 @@ model Card {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userCards UserCard[]
+}
+
+model UserCard {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId String
+  quality CardQuality
+  forSale Boolean @default(false)
+  price Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  notes String?
+
+  @@index([userId, cardId])
+  @@index([userId, quality])
+  @@index([userId, forSale])
 }
 
 model Set {
@@ -115,6 +144,7 @@ model User {
   accounts           Account[]
   sessions           Session[]
   verificationTokens EmailVerificationToken[]
+  userCards UserCard[]
 }
 
 model EmailVerificationToken {

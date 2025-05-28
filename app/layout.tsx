@@ -7,10 +7,9 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'PokéCollect - Pokémon Card Collection App',
+  title: 'Pokébase',
   description:
     'Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and even predict PSA grades!',
-  generator: 'v0.dev',
 };
 
 export default function RootLayout({

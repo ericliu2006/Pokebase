@@ -10,13 +10,13 @@ export async function GET() {
       return NextResponse.json({
         success: true,
         message: 'No cards found to update',
-        updatedCount: 0
+        updatedCount: 0,
       });
     }
 
     const results = await Promise.all(
       cards.map(card => {
-        console.log(card.name)
+        console.log(card.name);
         const prices = card.tcgplayer?.prices || {};
 
         return prisma.card.upsert({
@@ -76,9 +76,8 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       message: 'Cards updated successfully',
-      updatedCount: successfulUpdates.length
+      updatedCount: successfulUpdates.length,
     });
-    
   } catch (error) {
     console.error('Error updating cards:', error);
 
@@ -86,7 +85,7 @@ export async function GET() {
       {
         success: false,
         error: 'Failed to update cards',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );

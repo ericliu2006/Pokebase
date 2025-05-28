@@ -18,8 +18,17 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 
 export default function ProfilePage() {
-  const { data: session, update } = useSession();
   const router = useRouter();
+  const {
+    data: session,
+    status,
+    update,
+  } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/login');
+    },
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -90,9 +99,8 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
-  if (!session) {
-    router.push('/login');
-    return null;
+  if (status === 'loading') {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -184,8 +192,10 @@ export default function ProfilePage() {
       </Card>
 
       <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Danger Zone</CardTitle>
+        <CardHeader className="space-y-4">
+          <div>
+            <CardTitle>Danger Zone</CardTitle>
+          </div>
           <CardDescription className="text-red-600 dark:text-red-400">
             These actions are irreversible. Proceed with caution.
           </CardDescription>
