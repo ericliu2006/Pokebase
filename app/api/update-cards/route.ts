@@ -16,7 +16,6 @@ export async function GET() {
 
     const results = await Promise.all(
       cards.map(card => {
-        console.log(card.name);
         const prices = card.tcgplayer?.prices || {};
 
         return prisma.card.upsert({
@@ -35,6 +34,7 @@ export async function GET() {
             reverseHolofoilHighPrice: prices.reverseHolofoil?.high ?? null,
             reverseHolofoilMarketVal: prices.reverseHolofoil?.market ?? null,
             updatedAt: new Date(),
+            setName: card.set.name,
           },
           create: {
             id: card.id,
@@ -48,6 +48,7 @@ export async function GET() {
               ? JSON.stringify(Array.isArray(card.evolvesTo) ? card.evolvesTo : [card.evolvesTo])
               : null,
             setId: card.set.id,
+            setName: card.set.name,
             number: card.number,
             artist: card.artist || '',
             rarity: card.rarity || '',

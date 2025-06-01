@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -11,10 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Camera, Plus, Heart, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { AddCardDialog } from '@/components/cards/add-card-dialog';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [isAddCardDialogOpen, setIsAddCardDialogOpen] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -48,10 +50,19 @@ export default function DashboardPage() {
             <Camera className="mr-2 h-4 w-4" />
             Scan Card
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setIsAddCardDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Manually
           </Button>
+
+          <AddCardDialog
+            open={isAddCardDialogOpen}
+            onOpenChange={setIsAddCardDialogOpen}
+            onAddCard={card => {
+              toast.success(`${card.name} added to your collection!`);
+              // Here you would typically call your API to add the card to the user's collection
+            }}
+          />
         </div>
       </div>
 

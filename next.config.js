@@ -19,6 +19,7 @@ const nextConfig = {
         hostname: 's.gravatar.com',
       },
     ],
+    domains: ['via.placeholder.com', 'images.pokemontcg.io'],
   },
   async headers() {
     return [

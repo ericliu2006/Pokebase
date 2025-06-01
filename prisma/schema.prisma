@@ -65,6 +65,7 @@ model Card {
   // Set relation (optional)
   set   Set  @relation(fields: [setId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   setId String
+  setName String @default("Unknown Set")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
