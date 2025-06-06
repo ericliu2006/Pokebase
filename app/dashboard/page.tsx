@@ -60,7 +60,7 @@ export default function DashboardPage() {
             onOpenChange={setIsAddCardDialogOpen}
             onAddCard={card => {
               toast.success(`${card.name} added to your collection!`);
-              // Here you would typically call your API to add the card to the user's collection
+              
             }}
           />
         </div>

@@ -13,7 +13,7 @@ export async function GET(request: Request) {
           OR: [
             { name: { contains: term, mode: 'insensitive' } },
             { number: { contains: term, mode: 'insensitive' } },
-            { setId: { contains: term, mode: 'insensitive' } },
+            { setName: { contains: term, mode: 'insensitive' } },
           ]
         }))
       }

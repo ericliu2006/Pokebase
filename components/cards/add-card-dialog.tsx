@@ -18,6 +18,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
   const [searchResults, setSearchResults] = useState<CardType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
+  const [noResults, setNoResults] = useState(false);
 
   // Mock search function - replace with actual API call
   const searchCards = async (query: string) => {
@@ -27,6 +28,12 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
     try {
       const results = await fetch(`/api/search?query=${query}`);
       const cards: CardType[] = await results.json();
+      if (cards.length === 0) {
+        setNoResults(true);
+      }
+      else {
+        setNoResults(false);
+      }
 
       setSearchResults(cards);
     } catch (error) {
@@ -38,6 +45,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
   };
 
   useEffect(() => {
+    setNoResults(false);
     const delayDebounceFn = setTimeout(() => {
       if (searchQuery.trim()) {
         searchCards(searchQuery);
@@ -72,18 +80,23 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search for a Pokémon card..."
-            className="pl-10"
+            className="pl-10 pr-10"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
           />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+          <div className="absolute right-3 top-3 flex items-center gap-2">
+            {isLoading && searchQuery.length >= 3 && (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto mt-4">
@@ -120,7 +133,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
                 ))}
               </div>
             </>
-          ) : searchQuery && (searchQuery.length > 3) ? (
+          ) : searchQuery && (searchQuery.length >= 3) && noResults ? (
             <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
               <p>No cards found for &quot;{searchQuery}&quot;</p>
               <p className="text-sm">Try a different search term</p>
