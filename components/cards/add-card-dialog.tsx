@@ -10,10 +10,11 @@ import Image from 'next/image';
 interface AddCardDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddCard: (card: CardType) => void;
+  onAddCard: (card: CardType) => Promise<boolean>;
+  isAdding?: boolean;
 }
 
-export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogProps) {
+export function AddCardDialog({ open, onOpenChange, onAddCard, isAdding = false }: AddCardDialogProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<CardType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -112,11 +113,22 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
                   <div
                     key={card.id}
                     className="border rounded-md overflow-hidden hover:shadow-md transition-shadow cursor-pointer bg-white flex flex-col items-center p-1 text-xs"
-                    onClick={() => handleAddCard(card)}
                   >
-                    <div className="relative w-[160px] h-[224px] bg-muted">
+                    <div 
+                      className="relative w-[160px] h-[224px] bg-muted cursor-pointer"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (isAdding) return;
+                        const success = await onAddCard(card);
+                        if (success) {
+                          onOpenChange(false);
+                          setSearchQuery('');
+                          setSearchResults([]);
+                        }
+                      }}
+                    >
                       <Image
-                        src={card.image || '/placeholder-card.png'}
+                        src={card.image || '/placeholder.svg'}
                         alt={card.name}
                         fill
                         className="object-cover"

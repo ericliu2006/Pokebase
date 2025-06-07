@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,19 +12,108 @@ import { Camera, Plus, Heart, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { AddCardDialog } from '@/components/cards/add-card-dialog';
 
+interface CardType {
+  id: string;
+  name: string;
+  image: string | null;
+  rarity: string;
+  set?: {
+    name: string;
+  };
+  number: string;
+  supertype: string;
+  subtype: string;
+  hp: string;
+  types: string[];
+  evolvesFrom: string | null;
+  evolvesTo: string | null;
+  artist: string;
+  // Add other card properties as needed
+}
+
+interface UserCard {
+  id: string;
+  card: CardType;
+  quality: string;
+  forSale: boolean;
+  price: number | null;
+  createdAt: string;
+}
+
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isAddCardDialogOpen, setIsAddCardDialogOpen] = useState(false);
+  const [userCards, setUserCards] = useState<UserCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       toast.error('You must be signed in to view this page');
       router.push('/login');
+    } else if (status === 'authenticated') {
+      fetchUserCards();
     }
   }, [status, router]);
 
-  if (status === 'loading') {
+  const fetchUserCards = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/user-cards', {
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch cards');
+      }
+      
+      const data = await response.json();
+      setUserCards(data);
+    } catch (error) {
+      console.error('Error fetching cards:', error);
+      toast.error('Failed to load your collection');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddCard = async (card: CardType) => {
+    try {
+      setIsAdding(true);
+      const response = await fetch('/api/add-usercard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          cardId: card.id,
+          // Include any other required fields here
+          quality: 'MINT',
+          forSale: false,
+          price: null,
+          notes: ''
+        }),
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error || 'Failed to add card to collection');
+      }
+
+      // Refresh the cards list
+      await fetchUserCards();
+      toast.success(`${card.name} added to your collection!`);
+      return true;
+    } catch (error) {
+      console.error('Error adding card:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to add card to collection');
+      return false;
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  if (status === 'loading' || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-rose-500"></div>
@@ -34,8 +122,16 @@ export default function DashboardPage() {
   }
 
   if (!session) {
-    return null; // or a loading state
+    return null;
   }
+
+  // Filter cards by category
+  const allCards = userCards;
+  const favoriteCards = userCards.filter(card => false); // Add favorite logic if needed
+  const forSaleCards = userCards.filter(card => card.forSale);
+  const recentCards = [...userCards]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 10);
   return (
     <div className="container px-4 py-8 mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -58,10 +154,8 @@ export default function DashboardPage() {
           <AddCardDialog
             open={isAddCardDialogOpen}
             onOpenChange={setIsAddCardDialogOpen}
-            onAddCard={card => {
-              toast.success(`${card.name} added to your collection!`);
-              
-            }}
+            onAddCard={handleAddCard}
+            isAdding={isAdding}
           />
         </div>
       </div>
@@ -69,22 +163,22 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatsCard
           title="Total Cards"
-          value="127"
+          value={userCards.length.toString()}
           description="Cards in your collection"
           color="bg-teal-50"
           textColor="text-teal-600"
         />
         <StatsCard
-          title="Collection Value"
-          value="$3,245.78"
-          description="Estimated market value"
+          title="For Sale"
+          value={forSaleCards.length.toString()}
+          description="Cards listed for sale"
           color="bg-violet-50"
           textColor="text-violet-600"
         />
         <StatsCard
-          title="Rarest Card"
-          value="Charizard GX"
-          description="PSA 9 • $350.00"
+          title="Total Value"
+          value={`$${userCards.reduce((sum, card) => sum + (card.price || 0), 0).toFixed(2)}`}
+          description="Estimated collection value"
           color="bg-amber-50"
           textColor="text-amber-600"
         />
@@ -92,44 +186,68 @@ export default function DashboardPage() {
 
       <Tabs defaultValue="all" className="mb-8">
         <TabsList className="mb-4">
-          <TabsTrigger value="all">All Cards</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          <TabsTrigger value="forSale">For Sale</TabsTrigger>
+          <TabsTrigger value="all">All Cards ({allCards.length})</TabsTrigger>
+          <TabsTrigger value="favorites">Favorites ({favoriteCards.length})</TabsTrigger>
+          <TabsTrigger value="forSale">For Sale ({forSaleCards.length})</TabsTrigger>
           <TabsTrigger value="recent">Recently Added</TabsTrigger>
         </TabsList>
+        
         <TabsContent value="all" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => (
-              <PokemonCard key={i} />
+            {allCards.map(card => (
+              <UserPokemonCard key={card.id} userCard={card} />
             ))}
+            {allCards.length === 0 && !isLoading && (
+              <div className="col-span-full text-center py-10 text-muted-foreground">
+                <p>No cards in your collection yet.</p>
+                <p className="text-sm mt-2">Add your first card to get started!</p>
+              </div>
+            )}
           </div>
         </TabsContent>
+
         <TabsContent value="favorites" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3].map(i => (
-              <PokemonCard key={i} />
-            ))}
+            {favoriteCards.length > 0 ? (
+              favoriteCards.map(card => (
+                <UserPokemonCard key={card.id} userCard={card} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-muted-foreground">
+                <p>No favorite cards yet.</p>
+              </div>
+            )}
           </div>
         </TabsContent>
+
         <TabsContent value="forSale" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2].map(i => (
-              <PokemonCard key={i} />
-            ))}
+            {forSaleCards.length > 0 ? (
+              forSaleCards.map(card => (
+                <UserPokemonCard key={card.id} userCard={card} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-muted-foreground">
+                <p>No cards for sale.</p>
+              </div>
+            )}
           </div>
         </TabsContent>
+
         <TabsContent value="recent" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <PokemonCard key={i} />
-            ))}
+            {recentCards.length > 0 ? (
+              recentCards.map(card => (
+                <UserPokemonCard key={card.id} userCard={card} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-muted-foreground">
+                <p>No recent cards.</p>
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>
-
-      <div className="flex justify-center">
-        <Button variant="outline">Load More</Button>
-      </div>
     </div>
   );
 }
@@ -156,46 +274,88 @@ function StatsCard({ title, value, description, color, textColor }: StatsCardPro
   );
 }
 
-function PokemonCard() {
+function getRarityAbbreviation(rarity: string): string {
+  const rarityMap: Record<string, string> = {
+    'Special Illustration Rare': 'SIR',
+    'Illustration Rare': 'IR',
+    'Ultra Rare': 'UR',
+    'Hyper Rare': 'HR',
+    'Rainbow Rare': 'RR',
+    'Amazing Rare': 'AR',
+    'Rare Holo V': 'V',
+    'Rare Holo VMAX': 'VMAX',
+    'Rare Holo VSTAR': 'VSTAR',
+    'Rare Holo EX': 'EX',
+    'Rare Holo GX': 'GX',
+    'Rare Holo LV.X': 'LV.X',
+    'Rare Holo Star': '★',
+    'Rare Holo': '★',
+    'Rare': 'R',
+    'Uncommon': 'U',
+    'Common': 'C',
+    'Promo': 'P',
+  };
+  
+  return rarityMap[rarity] || rarity.split(' ').map(word => word[0]).join('').toUpperCase();
+}
+
+function UserPokemonCard({ userCard }: { userCard: UserCard }) {
+  const card = userCard.card;
+  const rarityAbbreviation = getRarityAbbreviation(card.rarity);
+  
   return (
-    <Link href="/card/1">
-      <Card className="overflow-hidden transition-all hover:shadow-md">
-        <div className="relative">
+    <div className="group border rounded-md overflow-hidden hover:shadow-md transition-all bg-white hover:shadow-lg hover:-translate-y-0.5">
+      <div className="relative w-full aspect-[2/3] bg-muted flex items-center justify-center">
+        {card.image ? (
           <Image
-            src="/placeholder.svg?height=300&width=215"
-            alt="Pokémon Card"
-            width={215}
-            height={300}
-            className="w-full object-cover"
+            src={card.image}
+            alt={card.name}
+            width={245}
+            height={342}
+            className="w-full h-full object-contain p-2 transition-transform group-hover:scale-105"
+            priority={false}
           />
-          <Button
-            size="icon"
-            variant="ghost"
-            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/80 text-rose-500 hover:bg-white hover:text-rose-600"
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400">
+            <span>No Image</span>
+          </div>
+        )}
+        <button 
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white text-rose-500 shadow-sm hover:shadow transition-all"
+          aria-label="Add to favorites"
+        >
+          <Heart className="h-4 w-4" />
+        </button>
+      </div>
+      <div className="p-3 border-t">
+        <div className="flex justify-between items-start gap-2">
+          <h3 className="font-medium text-sm leading-tight flex-1 min-w-0 break-words">
+            {card.name}
+          </h3>
+          <Badge 
+            variant="outline" 
+            className="text-[10px] h-5 px-1.5 flex-shrink-0"
+            title={card.rarity}
           >
-            <Heart className="h-4 w-4" />
-            <span className="sr-only">Add to favorites</span>
-          </Button>
+            {rarityAbbreviation}
+          </Badge>
         </div>
-        <CardContent className="p-3">
-          <div className="flex justify-between items-start mb-1">
-            <h3 className="font-medium text-sm truncate">Pikachu V</h3>
-            <Badge variant="outline" className="text-xs">
-              Rare
-            </Badge>
+        <div className="flex justify-between items-center text-xs text-muted-foreground">
+          <span className="truncate">{card.set?.name || 'Unknown Set'}</span>
+          <div className="flex items-center gap-1">
+            <Sparkles className="h-3 w-3 text-amber-500" />
+            <span>{userCard.quality}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-1">
-              <DollarSign className="h-3 w-3 text-emerald-500" />
-              <span className="text-xs font-medium">$24.99</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Sparkles className="h-3 w-3 text-amber-500" />
-              <span className="text-xs">PSA 8</span>
-            </div>
+        </div>
+        {userCard.forSale && userCard.price && (
+          <div className="mt-2 pt-2 border-t flex items-center justify-between">
+            <span className="text-sm font-medium">${userCard.price.toFixed(2)}</span>
+            <Button variant="outline" size="sm" className="h-7 text-xs">
+              Buy Now
+            </Button>
           </div>
-        </CardContent>
-      </Card>
-    </Link>
+        )}
+      </div>
+    </div>
   );
 }
