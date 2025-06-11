@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({
-      message: "Added card to your collection!"
+      message: 'Added card to your collection!',
     });
   } catch (error) {
     console.error('Error adding user card:', error);

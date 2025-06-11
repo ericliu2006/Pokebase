@@ -14,11 +14,10 @@ export async function GET(request: Request) {
             { name: { contains: term, mode: 'insensitive' } },
             { number: { contains: term, mode: 'insensitive' } },
             { setName: { contains: term, mode: 'insensitive' } },
-          ]
-        }))
-      }
+          ],
+        })),
+      },
     });
-    
 
     return NextResponse.json(cards);
   } catch (error) {

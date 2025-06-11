@@ -19,7 +19,7 @@ export default function Home() {
             priority
           />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold mb-4">PokéCollect</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-4">PokéBase</h1>
         <p className="text-lg text-muted-foreground mb-6 max-w-2xl">
           Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and
           even predict PSA grades!

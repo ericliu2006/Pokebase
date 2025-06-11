@@ -20,71 +20,45 @@ datasource db {
 }
 
 model Card {
-  id        String   @id
-  name      String
-  supertype String
-  subtype   String
-  hp    String
-  types String[]
-  evolvesFrom String?
-  evolvesTo   String? @db.Text // Store as JSON string
-  number String
-  artist String
-  rarity String 
-  image String?
-  // Normal prices
-  normalLowPrice Float?
-  normalMidPrice Float?
-  normalHighPrice Float?
-  normalMarketVal Float?
-  
-  // Holofoil prices
-  holofoilLowPrice Float?
-  holofoilMidPrice Float?
-  holofoilHighPrice Float?
-  holofoilMarketVal Float?
-  
-  // Reverse Holofoil prices
-  reverseHolofoilLowPrice Float?
-  reverseHolofoilMidPrice Float?
-  reverseHolofoilHighPrice Float?
-  reverseHolofoilMarketVal Float?
-  
-  // 1st Edition Normal prices
-  firstEditionNormalLowPrice Float?
-  firstEditionNormalMidPrice Float?
-  firstEditionNormalHighPrice Float?
-  firstEditionNormalMarketVal Float?
-  
-  // 1st Edition Holofoil prices
-  firstEditionHolofoilLowPrice Float?
-  firstEditionHolofoilMidPrice Float?
-  firstEditionHolofoilHighPrice Float?
-  firstEditionHolofoilMarketVal Float?
-  
+  id              String   @id
+  name            String
+  supertype       String
+  subtype         String
+  hp              String
+  types           String[]
+  evolvesFrom     String?
+  evolvesTo       String?  @db.Text // Store as JSON string
+  number          String
+  artist          String
+  rarity          String
+  image           String?
+
+  value Float?
+
   // Set relation (optional)
-  set   Set  @relation(fields: [setId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  setId String
+  set     Set    @relation(fields: [setId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  setId   String
   setName String @default("Unknown Set")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userCards UserCard[]
+  userCards        UserCard[]
+  CardPriceHistory CardPriceHistory[]
 }
 
 model UserCard {
-  id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
-  cardId String
-  quality CardQuality
-  forSale Boolean @default(false)
-  price Float?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  notes String?
+  id        String      @id @default(cuid())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  card      Card        @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  cardId    String
+  quality   CardQuality
+  forSale   Boolean     @default(false)
+  price     Float?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  notes     String?
 
   @@index([userId, cardId])
   @@index([userId, quality])
@@ -92,17 +66,27 @@ model UserCard {
 }
 
 model Set {
-  id        String    @id
-  name      String
-  series    String
+  id          String   @id
+  name        String
+  series      String
   releaseDate DateTime
-  total     Int
+  total       Int
   symbolImage String?
-  logoImage  String?
-  cards     Card[]
+  logoImage   String?
+  cards       Card[]
 
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CardPriceHistory {
+  id     Int      @id @default(autoincrement())
+  cardId String
+  card   Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  date   DateTime
+  price  Float?
+
+  @@unique([cardId, date])
 }
 
 model Account {
@@ -121,7 +105,6 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-
   @@unique([provider, providerAccountId])
 }
 
@@ -134,18 +117,18 @@ model Session {
 }
 
 model User {
-  id                 String    @id @default(cuid())
-  name               String?
-  email              String?   @unique
-  emailVerified      DateTime? @map("email_verified")
-  password           String?
-  image              String?
-  verificationToken  String?   @unique
+  id                  String                   @id @default(cuid())
+  name                String?
+  email               String?                  @unique
+  emailVerified       DateTime?                @map("email_verified")
+  password            String?
+  image               String?
+  verificationToken   String?                  @unique
   verificationExpires DateTime?
-  accounts           Account[]
-  sessions           Session[]
-  verificationTokens EmailVerificationToken[]
-  userCards UserCard[]
+  accounts            Account[]
+  sessions            Session[]
+  verificationTokens  EmailVerificationToken[]
+  userCards           UserCard[]
 }
 
 model EmailVerificationToken {
@@ -168,7 +151,7 @@ model VerificationToken {
   expires    DateTime
   createdAt  DateTime @default(now())
 
-  updatedAt  DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
   @@unique([identifier, token])
 }

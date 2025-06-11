@@ -43,9 +43,8 @@ export async function GET() {
 
   return NextResponse.json({
     success: failedCount === 0,
-    message: failedCount === 0
-      ? 'Sets updated successfully'
-      : `${failedCount} sets failed to update`,
+    message:
+      failedCount === 0 ? 'Sets updated successfully' : `${failedCount} sets failed to update`,
     updatedCount: successCount,
     failedCount,
   });

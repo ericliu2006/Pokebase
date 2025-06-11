@@ -47,7 +47,7 @@ export function Navigation() {
       )}
       <div className="container flex h-16 items-center px-4 mx-auto">
         <Link href="/" className="flex items-center font-bold text-xl">
-          <span className="text-rose-500">Poke</span>Base
+          <span className="text-rose-500">Poké</span>Base
         </Link>
         <nav className="ml-auto hidden md:flex gap-6">
           <NavLinks isLoggedIn={isLoggedIn} isEmailVerified={isEmailVerified} />

@@ -14,7 +14,12 @@ interface AddCardDialogProps {
   isAdding?: boolean;
 }
 
-export function AddCardDialog({ open, onOpenChange, onAddCard, isAdding = false }: AddCardDialogProps) {
+export function AddCardDialog({
+  open,
+  onOpenChange,
+  onAddCard,
+  isAdding = false,
+}: AddCardDialogProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<CardType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +36,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard, isAdding = false 
       const cards: CardType[] = await results.json();
       if (cards.length === 0) {
         setNoResults(true);
-      }
-      else {
+      } else {
         setNoResults(false);
       }
 
@@ -114,9 +118,9 @@ export function AddCardDialog({ open, onOpenChange, onAddCard, isAdding = false 
                     key={card.id}
                     className="border rounded-md overflow-hidden hover:shadow-md transition-shadow cursor-pointer bg-white flex flex-col items-center p-1 text-xs"
                   >
-                    <div 
+                    <div
                       className="relative w-[160px] h-[224px] bg-muted cursor-pointer"
-                      onClick={async (e) => {
+                      onClick={async e => {
                         e.stopPropagation();
                         if (isAdding) return;
                         const success = await onAddCard(card);
@@ -145,7 +149,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard, isAdding = false 
                 ))}
               </div>
             </>
-          ) : searchQuery && (searchQuery.length >= 3) && noResults ? (
+          ) : searchQuery && searchQuery.length >= 3 && noResults ? (
             <div className="flex flex-col items-center justify-center h-40 text-muted-foreground">
               <p>No cards found for &quot;{searchQuery}&quot;</p>
               <p className="text-sm">Try a different search term</p>

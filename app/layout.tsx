@@ -7,7 +7,7 @@ import { Providers } from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Pokébase',
+  title: 'PokéBase',
   description:
     'Scan, collect, and trade your Pokémon cards with friends. Get real-time valuations and even predict PSA grades!',
 };

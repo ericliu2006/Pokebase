@@ -11,25 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Camera, Plus, Heart, DollarSign, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { AddCardDialog } from '@/components/cards/add-card-dialog';
-
-interface CardType {
-  id: string;
-  name: string;
-  image: string | null;
-  rarity: string;
-  set?: {
-    name: string;
-  };
-  number: string;
-  supertype: string;
-  subtype: string;
-  hp: string;
-  types: string[];
-  evolvesFrom: string | null;
-  evolvesTo: string | null;
-  artist: string;
-  // Add other card properties as needed
-}
+import { Card as CardType } from '@prisma/client';
 
 interface UserCard {
   id: string;
@@ -63,11 +45,11 @@ export default function DashboardPage() {
       const response = await fetch('/api/user-cards', {
         credentials: 'include',
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch cards');
       }
-      
+
       const data = await response.json();
       setUserCards(data);
     } catch (error) {
@@ -84,15 +66,14 @@ export default function DashboardPage() {
       const response = await fetch('/api/add-usercard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           cardId: card.id,
-          // Include any other required fields here
           quality: 'MINT',
           forSale: false,
-          price: null,
-          notes: ''
+          price: card.value ?? null,
+          notes: '',
         }),
-        credentials: 'include'
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -191,7 +172,7 @@ export default function DashboardPage() {
           <TabsTrigger value="forSale">For Sale ({forSaleCards.length})</TabsTrigger>
           <TabsTrigger value="recent">Recently Added</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="all" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {allCards.map(card => (
@@ -209,9 +190,7 @@ export default function DashboardPage() {
         <TabsContent value="favorites" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {favoriteCards.length > 0 ? (
-              favoriteCards.map(card => (
-                <UserPokemonCard key={card.id} userCard={card} />
-              ))
+              favoriteCards.map(card => <UserPokemonCard key={card.id} userCard={card} />)
             ) : (
               <div className="col-span-full text-center py-10 text-muted-foreground">
                 <p>No favorite cards yet.</p>
@@ -223,9 +202,7 @@ export default function DashboardPage() {
         <TabsContent value="forSale" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {forSaleCards.length > 0 ? (
-              forSaleCards.map(card => (
-                <UserPokemonCard key={card.id} userCard={card} />
-              ))
+              forSaleCards.map(card => <UserPokemonCard key={card.id} userCard={card} />)
             ) : (
               <div className="col-span-full text-center py-10 text-muted-foreground">
                 <p>No cards for sale.</p>
@@ -237,9 +214,7 @@ export default function DashboardPage() {
         <TabsContent value="recent" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {recentCards.length > 0 ? (
-              recentCards.map(card => (
-                <UserPokemonCard key={card.id} userCard={card} />
-              ))
+              recentCards.map(card => <UserPokemonCard key={card.id} userCard={card} />)
             ) : (
               <div className="col-span-full text-center py-10 text-muted-foreground">
                 <p>No recent cards.</p>
@@ -275,6 +250,7 @@ function StatsCard({ title, value, description, color, textColor }: StatsCardPro
 }
 
 function getRarityAbbreviation(rarity: string): string {
+  if (!rarity.trim()) return '○';
   const rarityMap: Record<string, string> = {
     'Special Illustration Rare': 'SIR',
     'Illustration Rare': 'IR',
@@ -290,19 +266,26 @@ function getRarityAbbreviation(rarity: string): string {
     'Rare Holo LV.X': 'LV.X',
     'Rare Holo Star': '★',
     'Rare Holo': '★',
-    'Rare': 'R',
-    'Uncommon': 'U',
-    'Common': 'C',
-    'Promo': 'P',
+    Rare: 'R',
+    Uncommon: 'U',
+    Common: 'C',
+    Promo: 'P',
   };
-  
-  return rarityMap[rarity] || rarity.split(' ').map(word => word[0]).join('').toUpperCase();
+
+  return (
+    rarityMap[rarity] ||
+    rarity
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+  );
 }
 
 function UserPokemonCard({ userCard }: { userCard: UserCard }) {
   const card = userCard.card;
   const rarityAbbreviation = getRarityAbbreviation(card.rarity);
-  
+
   return (
     <div className="group border rounded-md overflow-hidden hover:shadow-md transition-all bg-white hover:shadow-lg hover:-translate-y-0.5">
       <div className="relative w-full aspect-[2/3] bg-muted flex items-center justify-center">
@@ -320,7 +303,7 @@ function UserPokemonCard({ userCard }: { userCard: UserCard }) {
             <span>No Image</span>
           </div>
         )}
-        <button 
+        <button
           className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white text-rose-500 shadow-sm hover:shadow transition-all"
           aria-label="Add to favorites"
         >
@@ -332,8 +315,8 @@ function UserPokemonCard({ userCard }: { userCard: UserCard }) {
           <h3 className="font-medium text-sm leading-tight flex-1 min-w-0 break-words">
             {card.name}
           </h3>
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className="text-[10px] h-5 px-1.5 flex-shrink-0"
             title={card.rarity}
           >
@@ -341,7 +324,7 @@ function UserPokemonCard({ userCard }: { userCard: UserCard }) {
           </Badge>
         </div>
         <div className="flex justify-between items-center text-xs text-muted-foreground">
-          <span className="truncate">{card.set?.name || 'Unknown Set'}</span>
+          <span className="truncate">{card.setName || 'Unknown Set'}</span>
           <div className="flex items-center gap-1">
             <Sparkles className="h-3 w-3 text-amber-500" />
             <span>{userCard.quality}</span>
